@@ -44,7 +44,11 @@ export const classSlice = createSlice({
   initialState,
   reducers: {
     checkForMatch: (state, action) => {
-      const attributes  = action.payload;
+      const attributes = action.payload;
+      if (Object.keys(attributes).length === 0) {
+        return;
+      }
+
       const clazzez = current(state);
       for (let [clazz, value] of Object.entries(clazzez)) {
         let match = true;

@@ -3,6 +3,7 @@ import Grid from "@mui/material/Grid";
 
 import Attributes from "../components/attributes/Attributes";
 import Clazz from "../components/class/Clazz";
+import Skills from "../components/skills/Skills";
 
 export default function WebappCharacter() {
   return (
@@ -14,7 +15,7 @@ export default function WebappCharacter() {
         <Clazz />
       </Grid>
       <Grid item xs={4}>
-        <Clazz />
+        <Skills />
       </Grid>
     </Grid>
   );

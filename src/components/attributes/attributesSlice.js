@@ -1,29 +1,42 @@
 import { createSlice, current } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 
 const initialState = {
-  strength: {
-    label: "Strength",
-    value: 0,
+  metadata: {
+    total: 60,
+    summary: {},
   },
-  dexterity: {
-    label: "dexterity",
-    value: 0,
-  },
-  constitution: {
-    label: "constitution",
-    value: 0,
-  },
-  intelligence: {
-    label: "intelligence",
-    value: 0,
-  },
-  wisdom: {
-    label: "wisdom",
-    value: 0,
-  },
-  charisma: {
-    label: "charisma",
-    value: 0,
+  data: {
+    strength: {
+      label: "Strength",
+      value: 10,
+      valueModifier: 0,
+    },
+    dexterity: {
+      label: "dexterity",
+      value: 10,
+      valueModifier: 0,
+    },
+    constitution: {
+      label: "constitution",
+      value: 10,
+      valueModifier: 0,
+    },
+    intelligence: {
+      label: "intelligence",
+      value: 10,
+      valueModifier: 0,
+    },
+    wisdom: {
+      label: "wisdom",
+      value: 10,
+      valueModifier: 0,
+    },
+    charisma: {
+      label: "charisma",
+      value: 10,
+      valueModifier: 0,
+    },
   },
 };
 
@@ -32,26 +45,50 @@ export const attributeSlice = createSlice({
   initialState,
   reducers: {
     incrementAttribute: (state, action) => {
-      const { key } = action.payload;
+      const key = action.payload;
 
-      if (!state[key]) {
+      const currentState = current(state);
+      if (currentState.metadata.total === 70) {
+        toast.error(`Attribute maximum limit reach of 70`);
         return;
       }
 
-      state[key].value = current(state)[key].value + 1;
+      const newValue = currentState.data[key].value + 1;
+
+      state.data[key].value = newValue;
+      state.data[key].valueModifier = Math.floor((newValue - 10) / 2);
+      state.metadata.total = currentState.metadata.total + 1;
+
+      state.metadata.summary = Object.entries(state.data).reduce(
+        (obj, [key, value]) => ({
+          ...obj,
+          [key]: value.value,
+        }),
+        {}
+      );
     },
     decrementAttribute: (state, action) => {
-      const { key } = action.payload;
+      const key = action.payload;
 
-      if (!state[key]) {
-        return;
-      }
+      const currentState = current(state);
+      const newValue = currentState.data[key].value - 1;
 
-      state[key].value = current(state)[key].value - 1;
+      state.data[key].value = newValue;
+      state.data[key].valueModifier = Math.floor((newValue - 10) / 2);
+      state.metadata.total = currentState.metadata.total - 1;
+
+      state.metadata.summary = Object.entries(state.data).reduce(
+        (obj, [key, value]) => ({
+          ...obj,
+          [key]: value.value,
+        }),
+        {}
+      );
     },
   },
 });
 
-export const { incrementAttribute, decrementAttribute } = attributeSlice.actions;
+export const { incrementAttribute, decrementAttribute } =
+  attributeSlice.actions;
 
 export default attributeSlice.reducer;
