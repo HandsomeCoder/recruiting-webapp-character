@@ -2,27 +2,60 @@ import * as React from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import { useSelector } from "react-redux";
-import { Typography } from "@mui/material";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import { ListItemText } from "@mui/material";
 
 export default function Clazz() {
   const clazzez = useSelector((state) => state.clazzez);
+  const [selectedClazz, setSelectedClazz] = React.useState("");
 
   return (
-    <List dense sx={{ width: "100%", maxWidth: 300 }}>
-      {Object.entries(clazzez).map(([key, value]) => {
-        return (
-          <ListItem sx={{ paddingY: "10px" }} key={key}>
-            <Typography
-              sx={{
-                fontWeight: value.match ? "bold" : "normal",
-                color: value.match ? "green" : "black",
-              }}
-            >
-              {value.label}
-            </Typography>
-          </ListItem>
-        );
-      })}
-    </List>
+    <Grid container spacing={2}>
+      <Grid item xs={6}>
+        <List dense sx={{ width: "100%" }}>
+          {Object.entries(clazzez).map(([key, value]) => {
+            return (
+              <ListItem sx={{ paddingY: "10px" }} key={key}>
+                <Button
+                  fullWidth
+                  variant={
+                    value.match || selectedClazz === key
+                      ? "contained"
+                      : "outlined"
+                  }
+                  color={value.match ? "success" : "primary"}
+                  onClick={() =>
+                    setSelectedClazz((state) => (key === state ? "" : key))
+                  }
+                >
+                  {value.label}
+                </Button>
+              </ListItem>
+            );
+          })}
+        </List>
+      </Grid>
+      <Grid item xs={6}>
+        {selectedClazz !== "" && (
+          <>
+            <List dense sx={{ width: "100%", maxWidth: 300 }}>
+              {Object.entries(clazzez[selectedClazz].attributes).map(
+                ([key, value]) => {
+                  return (
+                    <ListItem sx={{ paddingY: "10px" }} key={key}>
+                      <ListItemText
+                        primary={key}
+                        secondary={value}
+                      ></ListItemText>
+                    </ListItem>
+                  );
+                }
+              )}
+            </List>
+          </>
+        )}
+      </Grid>
+    </Grid>
   );
 }
