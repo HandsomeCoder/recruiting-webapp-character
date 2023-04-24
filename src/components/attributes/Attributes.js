@@ -69,7 +69,11 @@ export default function Attributes() {
               </>
             }
           >
-            <ListItemText id={key} primary={value.label} />
+            <ListItemText
+              id={key}
+              primary={value.label}
+              secondary={`Modifier ${Math.floor((value.value - 10) / 2)}`}
+            />
           </ListItem>
         );
       })}
